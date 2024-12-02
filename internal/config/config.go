@@ -19,19 +19,16 @@ func Read() Config {
 
 	file, err := os.Open(homeDir + "/.gatorconfig.json")
 	if err != nil {
-		fmt.Println("Error opening file:", err)
-		return Config{}
+		panic(fmt.Sprintf("Error opening file: %e", err))
 	}
 
 	defer file.Close()
 
-	// Decode the JSON data into the struct
 	var config Config
 	decoder := json.NewDecoder(file)
 	err = decoder.Decode(&config)
 	if err != nil {
-		fmt.Println("Error decoding JSON:", err)
-		return Config{}
+		panic(fmt.Sprintf("Error decoding JSON: %e", err))
 	}
 
 	return config

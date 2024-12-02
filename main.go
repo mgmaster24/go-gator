@@ -1,19 +1,25 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"os"
+
+	_ "github.com/lib/pq"
 
 	"github.com/mgmaster24/gator/internal"
 	"github.com/mgmaster24/gator/internal/command"
 	"github.com/mgmaster24/gator/internal/command/handlers"
 	"github.com/mgmaster24/gator/internal/config"
+	"github.com/mgmaster24/gator/internal/database"
 )
 
 func main() {
 	gatorConfig := config.Read()
+	db, err := sql.Open("postgres", gatorConfig.DbUrl)
 	var state internal.State = internal.State{
-		Cfg: &gatorConfig,
+		Cfg:     &gatorConfig,
+		Queries: database.New(db),
 	}
 
 	var commands *command.Commands = &command.Commands{
@@ -21,6 +27,7 @@ func main() {
 	}
 
 	commands.Register("login", handlers.Login)
+	commands.Register("register", handlers.Register)
 	args := os.Args
 	if len(args) < 2 {
 		fmt.Println("Not enough arguments")
@@ -32,9 +39,9 @@ func main() {
 		Args: args[2:],
 	}
 
-	err := commands.Run(&state, cmd)
+	err = commands.Run(&state, cmd)
 	if err != nil {
-		fmt.Println("Failed to run command. Error", err)
+		fmt.Printf("Failed to run command %s.\nError: %s\n", cmd.Name, err.Error())
 		os.Exit(1)
 	}
 }
