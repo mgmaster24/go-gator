@@ -28,6 +28,10 @@ func main() {
 
 	commands.Register("login", handlers.Login)
 	commands.Register("register", handlers.Register)
+	commands.Register("reset", handlers.Reset)
+	commands.Register("users", handlers.Users)
+	commands.Register("agg", handlers.Aggregate)
+
 	args := os.Args
 	if len(args) < 2 {
 		fmt.Println("Not enough arguments")
