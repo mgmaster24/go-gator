@@ -24,6 +24,7 @@ func Read() Config {
 
 	defer file.Close()
 
+	// Decode the JSON data into the struct
 	var config Config
 	decoder := json.NewDecoder(file)
 	err = decoder.Decode(&config)

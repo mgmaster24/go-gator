@@ -28,9 +28,11 @@ func main() {
 
 	commands.Register("login", handlers.Login)
 	commands.Register("register", handlers.Register)
-	commands.Register("reset", handlers.Reset)
+	commands.Register("reset", handlers.ResetUsers)
 	commands.Register("users", handlers.Users)
 	commands.Register("agg", handlers.Aggregate)
+	commands.Register("addfeed", handlers.AddFeed)
+	commands.Register("feeds", handlers.Feeds)
 
 	args := os.Args
 	if len(args) < 2 {

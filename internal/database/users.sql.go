@@ -48,12 +48,12 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 	return i, err
 }
 
-const getUser = `-- name: GetUser :one
+const getUserByName = `-- name: GetUserByName :one
 SELECT id, created_at, updated_at, name FROM users WHERE name = $1
 `
 
-func (q *Queries) GetUser(ctx context.Context, name string) (User, error) {
-	row := q.db.QueryRowContext(ctx, getUser, name)
+func (q *Queries) GetUserByName(ctx context.Context, name string) (User, error) {
+	row := q.db.QueryRowContext(ctx, getUserByName, name)
 	var i User
 	err := row.Scan(
 		&i.ID,
@@ -62,6 +62,17 @@ func (q *Queries) GetUser(ctx context.Context, name string) (User, error) {
 		&i.Name,
 	)
 	return i, err
+}
+
+const getUserNameById = `-- name: GetUserNameById :one
+SELECT name FROM users WHERE id = $1
+`
+
+func (q *Queries) GetUserNameById(ctx context.Context, id uuid.UUID) (string, error) {
+	row := q.db.QueryRowContext(ctx, getUserNameById, id)
+	var name string
+	err := row.Scan(&name)
+	return name, err
 }
 
 const getUsers = `-- name: GetUsers :many
@@ -91,10 +102,10 @@ func (q *Queries) GetUsers(ctx context.Context) ([]string, error) {
 	return items, nil
 }
 
-const reset = `-- name: Reset :execresult
+const resetUsers = `-- name: ResetUsers :execresult
 DELETE FROM users
 `
 
-func (q *Queries) Reset(ctx context.Context) (sql.Result, error) {
-	return q.db.ExecContext(ctx, reset)
+func (q *Queries) ResetUsers(ctx context.Context) (sql.Result, error) {
+	return q.db.ExecContext(ctx, resetUsers)
 }
