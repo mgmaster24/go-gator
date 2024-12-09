@@ -29,6 +29,16 @@ func Users(s *internal.State, cmd command.Command) error {
 	return nil
 }
 
+func ResetUsers(s *internal.State, cmd command.Command) error {
+	_, err := s.Queries.ResetUsers(context.Background())
+	if err != nil {
+		return fmt.Errorf("Error resetting the users table Error: %s", err.Error())
+	}
+
+	fmt.Println("Reset all users in the users table")
+	return nil
+}
+
 func Login(s *internal.State, cmd command.Command) error {
 	if len(cmd.Args) == 0 {
 		return fmt.Errorf("login expects a single parameter for the user name. command: %s", cmd)

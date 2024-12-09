@@ -12,6 +12,7 @@ import (
 	"github.com/mgmaster24/gator/internal/command/handlers"
 	"github.com/mgmaster24/gator/internal/config"
 	"github.com/mgmaster24/gator/internal/database"
+	"github.com/mgmaster24/gator/internal/middleware"
 )
 
 func main() {
@@ -31,8 +32,11 @@ func main() {
 	commands.Register("reset", handlers.ResetUsers)
 	commands.Register("users", handlers.Users)
 	commands.Register("agg", handlers.Aggregate)
-	commands.Register("addfeed", handlers.AddFeed)
+	commands.Register("addfeed", middleware.LoggedIn(handlers.AddFeed))
 	commands.Register("feeds", handlers.Feeds)
+	commands.Register("follow", middleware.LoggedIn(handlers.Follow))
+	commands.Register("unfollow", middleware.LoggedIn(handlers.Unfollow))
+	commands.Register("following", middleware.LoggedIn(handlers.Following))
 
 	args := os.Args
 	if len(args) < 2 {
