@@ -10,7 +10,6 @@ import (
 	"github.com/mgmaster24/gator/internal"
 	"github.com/mgmaster24/gator/internal/command"
 	"github.com/mgmaster24/gator/internal/database"
-	"github.com/mgmaster24/gator/internal/rss"
 )
 
 func AddFeed(
@@ -57,18 +56,6 @@ func AddFeed(
 	return nil
 }
 
-func Aggregate(s *internal.State, cmd command.Command) error {
-	url := "https://www.wagslane.dev/index.xml"
-	feed, err := rss.FetchFeed(context.Background(), url)
-	if err != nil {
-		return fmt.Errorf("Error fetching feed from %s. Error: %s", url, err.Error())
-	}
-
-	fmt.Println("Fetched feed from ", url)
-	fmt.Println(feed)
-	return nil
-}
-
 func Feeds(s *internal.State, cmd command.Command) error {
 	feeds, err := s.Queries.GetFeeds(context.Background())
 	if err != nil {
@@ -83,7 +70,7 @@ func Feeds(s *internal.State, cmd command.Command) error {
 
 		fmt.Println("Feed Name:", feed.Name)
 		fmt.Println("Feed URL:", feed.Url)
-		fmt.Println("Feed Add By:", username)
+		fmt.Println("Feed Added By:", username)
 	}
 
 	return nil
@@ -102,7 +89,6 @@ func Follow(
 	}
 
 	url := cmd.Args[0]
-
 	feed, err := s.Queries.GetFeedByURL(context.Background(), url)
 	if err != nil {
 		return fmt.Errorf("Error retrieving the feed from %s. Error: %s", url, err.Error())

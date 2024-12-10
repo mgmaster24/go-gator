@@ -19,11 +19,6 @@ func LoggedIn(
 			return err
 		}
 
-		err = handler(s, c, user)
-		if err != nil {
-			return err
-		}
-
-		return nil
+		return handler(s, c, user)
 	}
 }

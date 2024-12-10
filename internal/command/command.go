@@ -21,11 +21,7 @@ func (c *Commands) Register(name string, f func(*internal.State, Command) error)
 
 func (c *Commands) Run(s *internal.State, cmd Command) error {
 	if val, ok := c.CmdMap[cmd.Name]; ok {
-		err := val(s, cmd)
-		if err != nil {
-			return err
-		}
-		return nil
+		return val(s, cmd)
 	}
 
 	return fmt.Errorf("Command %s doesn't exist!", cmd.Name)
