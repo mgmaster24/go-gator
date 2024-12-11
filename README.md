@@ -108,4 +108,102 @@ for the application to function have been written.
 ```go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest```
 
 #### Configuration
-SQLC is configured by the [sqlc.yaml](./sqlc.yaml) at the root of the project.  
+SQLC is configured by the [sqlc.yaml](./sqlc.yaml) at the root of the project.
+
+## Building and Installing Gator
+
+### Building
+If you'd like to build the aggregator tool from the source,
+1. Be sure you have go install as it is a prerequisites for development and use of this application
+2. Clone this repository
+3. Be sure you are in the root directroy where the repo was cloned.
+4. Run `go build .`
+
+This will creating and executable binary with the name `gator`.
+
+### Installing
+If you would like to install the latest version of 'gator' simply run:
+```go install github.com/mgmaster24/gator```
+
+This will install the production binary in you Go bin directory.
+
+## Running Gator
+Now that we've discussed developing, building and installing the aggregator, we should probably learn how to use it.
+
+### Configuration
+`Gator` looks for a JSON config file in your user's home directory.  The file is name `.gatorconfig.json`. 
+(Ex. `~/.gatorconfig.json`)
+
+This file is in charge of creating the database connection to our postgres database. As well as for tracking
+the currently active user.  An example is shown below.
+
+```File: .gatorconfig.json
+───────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1   │ {
+   2   │   "db_url": "postgres://postgres:my-safe-pw@localhost:5432/gator?sslmode=disable",
+   3   │   "current_user_name": "someone_cool"
+   4   │ }
+```
+
+You can copy the example and change the necessary pieces.  Most notable the `postgres` username and password.
+
+### Commands
+
+#### Login
+Will login the provided username. Sets the config to use this user.
+
+```gator login user-name```
+
+#### Register
+Register a user with the aggregator.  Sets the config to use this user.
+
+```gator register user-name```
+
+#### Reset
+Removes all users from the database.  Mostly used for testing
+
+```gator reset```
+
+#### Users
+Lists all the users added to the aggregator.
+
+```gator users```
+
+#### Agg
+A continuously running method that will aggregate posts for all feeds.  A threshold in seconds
+is required to tell Gator how often to fetch posts for the oldest fetched feed.
+
+```gator agg 5s```
+
+
+#### Add Feed
+Adds a feed to the aggregator.
+
+```gator addfeed name-of-feed url-of-feed```
+
+#### Follow
+Marks the currently logged in user as following a feed.  Gator will get the currently logged in user from
+the gator config.
+
+```gator follow url-of-feed```
+
+#### Unfollow	
+Removes the currently logged in user from following a feed. Gator will get the currently logged in user
+from the gator config.
+
+```gator unfollow url-of-feed```
+
+
+#### Following	
+List the feeds the currently logged in user is following.  Gator will get the currently logged in users
+from the gator config.
+
+```gator following```
+
+#### Browse
+Lists the posts from the feeds that the currently logged in user is following.
+The parameter provided is an optional number of posts to return.  If it is not
+provided the default value of 2 will be used.
+
+
+```gator browse 10```

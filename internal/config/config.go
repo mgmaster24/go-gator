@@ -12,12 +12,13 @@ type Config struct {
 }
 
 func Read() Config {
-	homeDir, err := os.UserHomeDir()
+	filepath, err := getConfigFilePath()
 	if err != nil {
-		panic("Error getting user's home directory")
+		fmt.Println("Error getting user's home directory")
+		panic(err)
 	}
 
-	file, err := os.Open(homeDir + "/.gatorconfig.json")
+	file, err := os.Open(filepath)
 	if err != nil {
 		panic(fmt.Sprintf("Error opening file: %e", err))
 	}
